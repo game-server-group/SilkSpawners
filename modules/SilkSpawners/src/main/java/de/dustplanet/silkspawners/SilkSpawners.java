@@ -1,26 +1,5 @@
 package de.dustplanet.silkspawners;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import org.bstats.bukkit.Metrics;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import de.dustplanet.silkspawners.commands.SilkSpawnersTabCompleter;
 import de.dustplanet.silkspawners.commands.SpawnerCommand;
 import de.dustplanet.silkspawners.configs.Config;
@@ -33,6 +12,22 @@ import de.dustplanet.silkspawners.listeners.SilkSpawnersPlayerListener;
 import de.dustplanet.util.CommentedConfiguration;
 import de.dustplanet.util.SilkUtil;
 import net.gravitydevelopment.updater.Updater;
+import org.bstats.bukkit.Metrics;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * General stuff.
@@ -42,20 +37,21 @@ import net.gravitydevelopment.updater.Updater;
  */
 
 public class SilkSpawners extends JavaPlugin {
-    private SilkUtil su;
+
+    private static final String[] COMPATIBLE_MINECRAFT_VERSIONS = {"v1_7_R1", "v1_7_R2", "v1_7_R3", "v1_7_R4", "v1_8_R1", "v1_8_R2",
+        "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1", "v1_12_R1", "v1_13_R1", "v1_13_R2"};
     private Updater updater;
     private String nmsVersion;
     private static final int PLUGIN_ID = 35890;
-    private static final String[] COMPATIBLE_MINECRAFT_VERSIONS = { "v1_7_R1", "v1_7_R2", "v1_7_R3", "v1_7_R4", "v1_8_R1", "v1_8_R2",
-            "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1", "v1_12_R1", "v1_13_R1", "v1_13_R2" };
+    private SilkUtil silkUtil;
     public CommentedConfiguration config;
     public CommentedConfiguration localization;
     public CommentedConfiguration mobs;
 
     @Override
     public void onDisable() {
-        if (su != null) {
-            su.clearAll();
+        if (silkUtil != null) {
+            silkUtil.clearAll();
         }
     }
 
@@ -87,7 +83,7 @@ public class SilkSpawners extends JavaPlugin {
 
         // Heart of SilkSpawners is the SilkUtil class which holds all of our
         // important methods
-        su = new SilkUtil(this);
+        silkUtil = new SilkUtil(this);
 
         loadPermissions();
 
@@ -108,16 +104,16 @@ public class SilkSpawners extends JavaPlugin {
         }
 
         // Commands
-        SpawnerCommand spawnerCommand = new SpawnerCommand(this, su);
-        SilkSpawnersTabCompleter tabCompleter = new SilkSpawnersTabCompleter(su);
+        SpawnerCommand spawnerCommand = new SpawnerCommand(this, silkUtil);
+        SilkSpawnersTabCompleter tabCompleter = new SilkSpawnersTabCompleter(silkUtil);
         getCommand("silkspawners").setExecutor(spawnerCommand);
         getCommand("silkspawners").setTabCompleter(tabCompleter);
 
         // Listeners
-        SilkSpawnersBlockListener blockListener = new SilkSpawnersBlockListener(this, su);
-        SilkSpawnersPlayerListener playerListener = new SilkSpawnersPlayerListener(this, su);
-        SilkSpawnersInventoryListener inventoryListener = new SilkSpawnersInventoryListener(this, su);
-        SilkSpawnersEntityListener entityListener = new SilkSpawnersEntityListener(this, su);
+        SilkSpawnersBlockListener blockListener = new SilkSpawnersBlockListener(this, silkUtil);
+        SilkSpawnersPlayerListener playerListener = new SilkSpawnersPlayerListener(this, silkUtil);
+        SilkSpawnersInventoryListener inventoryListener = new SilkSpawnersInventoryListener(this, silkUtil);
+        SilkSpawnersEntityListener entityListener = new SilkSpawnersEntityListener(this, silkUtil);
         getServer().getPluginManager().registerEvents(blockListener, this);
         getServer().getPluginManager().registerEvents(playerListener, this);
         getServer().getPluginManager().registerEvents(inventoryListener, this);
@@ -131,7 +127,7 @@ public class SilkSpawners extends JavaPlugin {
             if (barAPI != null) {
                 // If BarAPI is enabled, load the economy
                 getLogger().info("Loaded BarAPI successfully!");
-                su.setBarAPI(true);
+                silkUtil.setBarAPI(true);
             } else {
                 // Else tell the admin about the missing of BarAPI
                 getLogger().info("BarAPI was not found and remains disabled!");
@@ -179,19 +175,19 @@ public class SilkSpawners extends JavaPlugin {
         loadPermissions("place", "Allows you to place the specific spawner", PermissionDefault.FALSE);
         loadPermissions("silkdrop", "Allows you to use silk touch to acquire mob spawner items", PermissionDefault.FALSE);
         loadPermissions("destroydrop", "Allows you to destroy mob spawners to acquire mob spawn eggs / iron bars / XP (as configured)",
-                PermissionDefault.FALSE);
+            PermissionDefault.FALSE);
         loadPermissions("changetype", "Allows you to change the spawner type using /spawner [creature]", PermissionDefault.FALSE);
         loadPermissions("changetypewithegg", "Allows you to change the spawner type by left-clicking with a spawn egg",
-                PermissionDefault.FALSE);
+            PermissionDefault.FALSE);
         loadPermissions("freeitem", "Allows you to get spawner items in your hand for free using /spawner [creature]",
-                PermissionDefault.FALSE);
+            PermissionDefault.FALSE);
         loadPermissions("freeitemegg", "Allows you to get spawn eggs in your hand for free using /spawner [creature]egg",
-                PermissionDefault.FALSE);
+            PermissionDefault.FALSE);
     }
 
     private void loadPermissions(String permissionPart, String description, PermissionDefault permDefault) {
         HashMap<String, Boolean> childPermissions = new HashMap<>();
-        for (String mobAlias : su.getDisplayNameToMobID().keySet()) {
+        for (String mobAlias : silkUtil.getDisplayNameToMobID().keySet()) {
             mobAlias = mobAlias.toLowerCase().replace(" ", "");
             childPermissions.put("silkspawners." + permissionPart + "." + mobAlias, true);
         }
@@ -272,9 +268,9 @@ public class SilkSpawners extends JavaPlugin {
 
         // Add "base" recipe for eggs containing no durability (not from SilkSpawners)
         // 1.9 deprecated the durability and uses NBT tags
-        String baseSpawnerEntityID = su.getDefaultEntityID();
+        String baseSpawnerEntityID = silkUtil.getDefaultEntityID();
         int baseSpawnerAmount = config.getInt("recipeAmount", 1);
-        ItemStack baseSpawnerItem = su.newSpawnerItem(baseSpawnerEntityID, "&e&o??? &r&fSpawner", baseSpawnerAmount, false);
+        ItemStack baseSpawnerItem = silkUtil.newSpawnerItem(baseSpawnerEntityID, "&e&o??? &r&fSpawner", baseSpawnerAmount, false);
         ShapedRecipe baseSpawnerRecipe = null;
         try {
             baseSpawnerRecipe = new ShapedRecipe(new NamespacedKey(this, "baseSpawner"), baseSpawnerItem);
@@ -299,7 +295,7 @@ public class SilkSpawners extends JavaPlugin {
                 // We have an ingredient that is not in our shape. Ignore it then
                 if (shapeContainsIngredient(baseSpawnerShape, 'X')) {
                     // Use the right egg!
-                    baseSpawnerRecipe.setIngredient('X', su.nmsProvider.getSpawnEggMaterial());
+                    baseSpawnerRecipe.setIngredient('X', silkUtil.nmsProvider.getSpawnEggMaterial());
                 }
 
                 for (String ingredient : baseSpawnerIngredientsList) {
@@ -323,7 +319,7 @@ public class SilkSpawners extends JavaPlugin {
                     // Failed!
                     if (material == null) {
                         getLogger().info("shape material " + ingredients[1] + " of default spawner matched null");
-                        material = su.nmsProvider.getIronFenceMaterial();
+                        material = silkUtil.nmsProvider.getIronFenceMaterial();
                     }
                     baseSpawnerRecipe.setIngredient(character, material);
                 }
@@ -331,10 +327,10 @@ public class SilkSpawners extends JavaPlugin {
                 // If the custom recipe fails, we have a fallback
                 getLogger().warning("Could not add the default recipe!");
                 e.printStackTrace();
-                baseSpawnerRecipe.shape(new String[] { "AAA", "ABA", "AAA" });
-                baseSpawnerRecipe.setIngredient('A', su.nmsProvider.getIronFenceMaterial());
+                baseSpawnerRecipe.shape(new String[]{"AAA", "ABA", "AAA"});
+                baseSpawnerRecipe.setIngredient('A', silkUtil.nmsProvider.getIronFenceMaterial());
                 // Use the right egg!
-                baseSpawnerRecipe.setIngredient('B', su.nmsProvider.getSpawnEggMaterial());
+                baseSpawnerRecipe.setIngredient('B', silkUtil.nmsProvider.getSpawnEggMaterial());
             } finally {
                 // Add it
                 getServer().addRecipe(baseSpawnerRecipe);
@@ -342,7 +338,7 @@ public class SilkSpawners extends JavaPlugin {
         }
 
         // For all our entities
-        for (String entityID : su.getMobIDToDisplayName().keySet()) {
+        for (String entityID : silkUtil.getMobIDToDisplayName().keySet()) {
 
             // If the mob is disabled, skip it
             if (!mobs.getBoolean("creatures." + entityID + ".enableCraftingSpawner", true)) {
@@ -367,7 +363,7 @@ public class SilkSpawners extends JavaPlugin {
                 getLogger().info("Amount of " + entityID + ": " + amount);
             }
             // Output is a spawner of this type with a custom amount
-            ItemStack spawnerItem = su.newSpawnerItem(entityID, su.getCustomSpawnerName(entityID), amount, true);
+            ItemStack spawnerItem = silkUtil.newSpawnerItem(entityID, silkUtil.getCustomSpawnerName(entityID), amount, true);
             ShapedRecipe recipe = null;
             try {
                 recipe = new ShapedRecipe(new NamespacedKey(this, entityID), spawnerItem);
@@ -450,7 +446,7 @@ public class SilkSpawners extends JavaPlugin {
                     }
                     // Use the right egg!
                     // TODO
-                    recipe.setIngredient('X', su.nmsProvider.getSpawnEggMaterial(), 0);
+                    recipe.setIngredient('X', silkUtil.nmsProvider.getSpawnEggMaterial(), 0);
                 }
                 for (String ingredient : ingredientsList) {
                     // They are added like this A,DIRT
@@ -473,7 +469,7 @@ public class SilkSpawners extends JavaPlugin {
                     // Failed!
                     if (material == null) {
                         getLogger().info("shape material " + ingredients[1] + " of " + entityID + " matched null");
-                        material = su.nmsProvider.getIronFenceMaterial();
+                        material = silkUtil.nmsProvider.getIronFenceMaterial();
                     }
                     recipe.setIngredient(character, material);
                 }
@@ -481,11 +477,11 @@ public class SilkSpawners extends JavaPlugin {
                 // If the custom recipe fails, we have a fallback
                 getLogger().warning("Could not add the recipe of " + entityID + "!");
                 e.printStackTrace();
-                recipe.shape(new String[] { "AAA", "ABA", "AAA" });
-                recipe.setIngredient('A', su.nmsProvider.getIronFenceMaterial());
+                recipe.shape(new String[]{"AAA", "ABA", "AAA"});
+                recipe.setIngredient('A', silkUtil.nmsProvider.getIronFenceMaterial());
                 // Use the right egg!
                 // TODO
-                recipe.setIngredient('B', su.nmsProvider.getSpawnEggMaterial(), 0);
+                recipe.setIngredient('B', silkUtil.nmsProvider.getSpawnEggMaterial(), 0);
             } finally {
                 // Add it
                 getServer().addRecipe(recipe);
@@ -516,7 +512,7 @@ public class SilkSpawners extends JavaPlugin {
             return;
         }
         if (player.hasPermission("silkspawners.info")) {
-            su.sendMessage(player, message);
+            silkUtil.sendMessage(player, message);
         }
     }
 
@@ -524,7 +520,7 @@ public class SilkSpawners extends JavaPlugin {
         config.load();
         config.save();
         loadConfig();
-        su.load();
+        silkUtil.load();
         mobs.load();
         mobs.save();
         localization.load();

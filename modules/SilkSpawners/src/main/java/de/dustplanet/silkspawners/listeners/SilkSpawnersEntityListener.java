@@ -1,7 +1,7 @@
 package de.dustplanet.silkspawners.listeners;
 
-import java.util.Random;
-
+import de.dustplanet.silkspawners.SilkSpawners;
+import de.dustplanet.util.SilkUtil;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EnderDragon;
@@ -13,8 +13,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
-import de.dustplanet.silkspawners.SilkSpawners;
-import de.dustplanet.util.SilkUtil;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Handle the explosion of a spawner.
@@ -25,13 +25,13 @@ import de.dustplanet.util.SilkUtil;
 
 public class SilkSpawnersEntityListener implements Listener {
     private SilkSpawners plugin;
-    private SilkUtil su;
-    private Random rnd;
+    private SilkUtil silkUtil;
+    private Random random;
 
-    public SilkSpawnersEntityListener(SilkSpawners instance, SilkUtil util) {
-        plugin = instance;
-        su = util;
-        rnd = new Random();
+    public SilkSpawnersEntityListener(SilkSpawners plugin, SilkUtil silkUtil) {
+        this.plugin = plugin;
+        this.silkUtil = silkUtil;
+        this.random = ThreadLocalRandom.current();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -58,10 +58,10 @@ public class SilkSpawnersEntityListener implements Listener {
         if (drop) {
             for (Block block : event.blockList()) {
                 // We have a spawner
-                if (block.getType() == su.nmsProvider.getSpawnerMaterial()) {
+                if (block.getType() == silkUtil.nmsProvider.getSpawnerMaterial()) {
                     // Roll the dice
-                    int randomNumber = rnd.nextInt(100);
-                    String entityID = su.getSpawnerEntityID(block);
+                    int randomNumber = random.nextInt(100);
+                    String entityID = silkUtil.getSpawnerEntityID(block);
                     // Check if we should drop a block
                     int dropChance = 0;
                     if (plugin.mobs.contains("creatures." + entityID + ".explosionDropChance")) {
@@ -72,7 +72,7 @@ public class SilkSpawnersEntityListener implements Listener {
                     if (randomNumber < dropChance) {
                         World world = block.getWorld();
                         world.dropItemNaturally(block.getLocation(),
-                                su.newSpawnerItem(entityID, su.getCustomSpawnerName(entityID), 1, false));
+                            silkUtil.newSpawnerItem(entityID, silkUtil.getCustomSpawnerName(entityID), 1, false));
                     }
                 }
             }

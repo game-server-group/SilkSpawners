@@ -1,5 +1,7 @@
 package de.dustplanet.silkspawners.listeners;
 
+import de.dustplanet.silkspawners.SilkSpawners;
+import de.dustplanet.util.SilkUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,9 +12,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 
-import de.dustplanet.silkspawners.SilkSpawners;
-import de.dustplanet.util.SilkUtil;
-
 /**
  * To show a chat message that a player clicked on an mob spawner.
  *
@@ -21,12 +20,13 @@ import de.dustplanet.util.SilkUtil;
  */
 
 public class SilkSpawnersInventoryListener implements Listener {
-    private SilkSpawners plugin;
-    private SilkUtil su;
 
-    public SilkSpawnersInventoryListener(SilkSpawners instance, SilkUtil util) {
-        plugin = instance;
-        su = util;
+    private SilkSpawners plugin;
+    private SilkUtil silkUtil;
+
+    public SilkSpawnersInventoryListener(SilkSpawners plugin, SilkUtil silkUtil) {
+        this.plugin = plugin;
+        this.silkUtil = silkUtil;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -35,16 +35,16 @@ public class SilkSpawnersInventoryListener implements Listener {
             return;
         }
 
-        if (event.getRecipe().getResult().getType() != su.nmsProvider.getSpawnerMaterial()) {
+        if (event.getRecipe().getResult().getType() != silkUtil.nmsProvider.getSpawnerMaterial()) {
             return;
         }
 
         ItemStack result = event.getRecipe().getResult();
 
         for (ItemStack itemStack : event.getInventory().getContents()) {
-            if (itemStack.getType() == su.nmsProvider.getSpawnEggMaterial() && itemStack.getDurability() == 0) {
-                String entityID = su.getStoredEggEntityID(itemStack);
-                result = su.newSpawnerItem(entityID, su.getCustomSpawnerName(entityID), result.getAmount(), true);
+            if (itemStack.getType() == silkUtil.nmsProvider.getSpawnEggMaterial() && itemStack.getDurability() == 0) {
+                String entityID = silkUtil.getStoredEggEntityID(itemStack);
+                result = silkUtil.newSpawnerItem(entityID, silkUtil.getCustomSpawnerName(entityID), result.getAmount(), true);
                 event.getInventory().setResult(result);
             }
         }
@@ -56,7 +56,7 @@ public class SilkSpawnersInventoryListener implements Listener {
             return;
         }
 
-        if (event.getCurrentItem().getType() != su.nmsProvider.getSpawnerMaterial()) {
+        if (event.getCurrentItem().getType() != silkUtil.nmsProvider.getSpawnerMaterial()) {
             return;
         }
 
@@ -66,20 +66,20 @@ public class SilkSpawnersInventoryListener implements Listener {
 
         Player player = (Player) event.getWhoClicked();
 
-        String entityID = su.getStoredSpawnerItemEntityID(event.getCurrentItem());
+        String entityID = silkUtil.getStoredSpawnerItemEntityID(event.getCurrentItem());
         if (entityID == null) {
-            entityID = su.getDefaultEntityID();
+            entityID = silkUtil.getDefaultEntityID();
         }
-        String creatureName = su.getCreatureName(entityID);
+        String creatureName = silkUtil.getCreatureName(entityID);
 
         String spawnerName = creatureName.toLowerCase().replace(" ", "");
         if (!player.hasPermission("silkspawners.craft." + spawnerName)) {
             event.setCancelled(true);
-            su.sendMessage(player,
-                    ChatColor
-                            .translateAlternateColorCodes('\u0026',
-                                    plugin.localization.getString("noPermissionCraft").replace("%ID%", entityID))
-                            .replace("%creature%", spawnerName));
+            silkUtil.sendMessage(player,
+                ChatColor
+                    .translateAlternateColorCodes('\u0026',
+                        plugin.localization.getString("noPermissionCraft").replace("%ID%", entityID))
+                    .replace("%creature%", spawnerName));
             return;
         }
     }
@@ -90,7 +90,7 @@ public class SilkSpawnersInventoryListener implements Listener {
             return;
         }
 
-        if (event.getCurrentItem().getType() != su.nmsProvider.getSpawnerMaterial()) {
+        if (event.getCurrentItem().getType() != silkUtil.nmsProvider.getSpawnerMaterial()) {
             return;
         }
 
@@ -100,15 +100,15 @@ public class SilkSpawnersInventoryListener implements Listener {
 
         Player player = (Player) event.getWhoClicked();
 
-        String entityID = su.getStoredSpawnerItemEntityID(event.getCurrentItem());
+        String entityID = silkUtil.getStoredSpawnerItemEntityID(event.getCurrentItem());
 
         if (entityID == null) {
-            entityID = su.getDefaultEntityID();
+            entityID = silkUtil.getDefaultEntityID();
         }
-        String creatureName = su.getCreatureName(entityID);
+        String creatureName = silkUtil.getCreatureName(entityID);
 
         if (plugin.config.getBoolean("notifyOnClick") && player.hasPermission("silkspawners.info")) {
-            su.notify(player, creatureName);
+            silkUtil.notify(player, creatureName);
         }
     }
 }
