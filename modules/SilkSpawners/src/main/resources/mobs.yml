@@ -1,12 +1,12 @@
 # creatures: key is official creature type name (mobID), case-sensitive, from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
 creatures:
 
-   # Vanilla mobs, from https://minecraft.gamepedia.com/Data_values/Entity_IDs
+  # Vanilla mobs, from https://minecraft.gamepedia.com/Data_values/Entity_IDs
   Creeper: &creeper
     aliases:
-    - c
-    - creep
-    - cataclysm
+      - c
+      - creep
+      - cataclysm
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -14,10 +14,10 @@ creatures:
   creeper: *creeper
   Skeleton: &skeleton
     aliases:
-    - s
-    - sk
-    - skelly
-    - skellington
+      - s
+      - sk
+      - skelly
+      - skellington
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -25,8 +25,8 @@ creatures:
   skeleton: *skeleton
   Spider: &spider
     aliases:
-    - sp
-    - bug
+      - sp
+      - bug
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -34,7 +34,7 @@ creatures:
   spider: *spider
   Giant: &giant
     aliases:
-    - giantzombie
+      - giantzombie
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -42,8 +42,8 @@ creatures:
   giant: *giant
   Zombie: &zombie
     aliases:
-    - z
-    - zed
+      - z
+      - zed
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -51,7 +51,7 @@ creatures:
   zombie: *zombie
   Slime: &slime
     aliases:
-    - sl
+      - sl
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -59,8 +59,8 @@ creatures:
   slime: *slime
   Ghast: &ghast
     aliases:
-    - g
-    - ghost
+      - g
+      - ghost
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -68,10 +68,10 @@ creatures:
   ghast: *ghast
   PigZombie: &zombie_pigman
     aliases:
-    - pigman
-    - zombiepigman
-    - pg
-    - zp
+      - pigman
+      - zombiepigman
+      - pg
+      - zp
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -79,11 +79,11 @@ creatures:
   zombie_pigman: *zombie_pigman
   Enderman: &enderman
     aliases:
-    - e
-    - ender
-    - endermen
-    - slenderman
-    - slender
+      - e
+      - ender
+      - endermen
+      - slenderman
+      - slender
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -91,9 +91,9 @@ creatures:
   enderman: *enderman
   CaveSpider: &cave_spider
     aliases:
-    - cspider
-    - cs
-    - bluespider
+      - cspider
+      - cs
+      - bluespider
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -101,8 +101,8 @@ creatures:
   cave_spider: *cave_spider
   Silverfish: &silverfish
     aliases:
-    - sf
-    - sfish
+      - sf
+      - sfish
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -110,8 +110,8 @@ creatures:
   silverfish: *silverfish
   Blaze: &blaze
     aliases:
-    - bl
-    - b
+      - bl
+      - b
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -119,11 +119,11 @@ creatures:
   blaze: *blaze
   LavaSlime: &magma_cube
     aliases:
-    - magmacube
-    - mcube
-    - magma
-    - m
-    - mc
+      - magmacube
+      - mcube
+      - magma
+      - m
+      - mc
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -131,8 +131,8 @@ creatures:
   magma_cube: *magma_cube
   EnderDragon: &ender_dragon
     aliases:
-    - dragon
-    - raqreqentba
+      - dragon
+      - raqreqentba
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -140,7 +140,7 @@ creatures:
   ender_dragon: *ender_dragon
   Pig: &pig
     aliases:
-    - p
+      - p
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -148,7 +148,7 @@ creatures:
   pig: *pig
   Sheep: &sheep
     aliases:
-    - sh
+      - sh
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -156,7 +156,7 @@ creatures:
   sheep: *sheep
   Cow: &cow
     aliases:
-    - bovine
+      - bovine
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -164,9 +164,9 @@ creatures:
   cow: *cow
   Chicken: &chicken
     aliases:
-    - ch
-    - chick
-    - bird
+      - ch
+      - chick
+      - bird
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -174,8 +174,8 @@ creatures:
   chicken: *chicken
   Squid: &squid
     aliases:
-    - sq
-    - octopus
+      - sq
+      - octopus
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -183,8 +183,8 @@ creatures:
   squid: *squid
   Wolf: &wolf
     aliases:
-    - w
-    - dog
+      - w
+      - dog
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -192,8 +192,8 @@ creatures:
   wolf: *wolf
   MushroomCow: &mooshroom
     aliases:
-    - mc
-    - mcow
+      - mc
+      - mcow
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -201,11 +201,11 @@ creatures:
   mooshroom: *mooshroom
   SnowMan: &snowman
     aliases:
-    - golem
-    - sgolem
-    - sg
-    - sm
-    - snowmen
+      - golem
+      - sgolem
+      - sg
+      - sm
+      - snowmen
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -213,11 +213,11 @@ creatures:
   snowman: *snowman
   Ozelot: &ocelot
     aliases:
-    - ocelot
-    - oce
-    - o
-    - cat
-    - kitty
+      - ocelot
+      - oce
+      - o
+      - cat
+      - kitty
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -225,10 +225,10 @@ creatures:
   ocelot: *ocelot
   VillagerGolem: &villager_golem
     aliases:
-    - igolem
-    - ironman
-    - iron
-    - ig
+      - igolem
+      - ironman
+      - iron
+      - ig
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -236,8 +236,8 @@ creatures:
   villager_golem: *villager_golem
   Villager: &villager
     aliases:
-    - v
-    - npc
+      - v
+      - npc
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -245,9 +245,9 @@ creatures:
   villager: *villager
   Witch: &witch
     aliases:
-    - hag
-    - sibly
-    - sorceress
+      - hag
+      - sibly
+      - sorceress
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -255,7 +255,7 @@ creatures:
   witch: *witch
   Bat: &bat
     aliases:
-    - batman
+      - batman
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -263,7 +263,7 @@ creatures:
   bat: *bat
   WitherBoss: &wither
     aliases:
-    - wboss
+      - wboss
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -271,10 +271,10 @@ creatures:
   wither: *wither
   EntityHorse: &horse
     aliases:
-    - horse
-    - h
-    - bronco
-    - pony
+      - horse
+      - h
+      - bronco
+      - pony
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -282,12 +282,12 @@ creatures:
   horse: *horse
   Rabbit: &rabbit
     aliases:
-    - r
-    - rab
-    - bunny
-    - hare
-    - cony
-    - coney
+      - r
+      - rab
+      - bunny
+      - hare
+      - cony
+      - coney
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -295,10 +295,10 @@ creatures:
   rabbit: *rabbit
   Endermite: &endermite
     aliases:
-    - mite
-    - acarid
-    - acarian
-    - acarine
+      - mite
+      - acarid
+      - acarian
+      - acarine
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -306,9 +306,9 @@ creatures:
   endermite: *endermite
   Guardian: &guardian
     aliases:
-    - keeper
-    - guard
-    - watcher
+      - keeper
+      - guard
+      - watcher
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -316,7 +316,7 @@ creatures:
   guardian: *guardian
   Shulker: &shulker
     aliases:
-    - shulk
+      - shulk
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true
@@ -324,11 +324,11 @@ creatures:
   shulker: *shulker
   PolarBear: &polar_bear
     aliases:
-    - bear
-    - polar
-    - ursus
-    - whitebear
-    - icebear
+      - bear
+      - polar
+      - ursus
+      - whitebear
+      - icebear
     enable: true
     enableCraftingSpawner: true
     enableSpawnEggOverride: true

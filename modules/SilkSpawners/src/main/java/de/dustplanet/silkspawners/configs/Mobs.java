@@ -1,10 +1,11 @@
 package de.dustplanet.silkspawners.configs;
 
-import java.util.ArrayList;
-
 import de.dustplanet.util.CommentedConfiguration;
 
+import java.util.ArrayList;
+
 public class Mobs extends AbstractConfiguration {
+
     public Mobs(CommentedConfiguration config) {
         super(config);
     }
@@ -17,7 +18,7 @@ public class Mobs extends AbstractConfiguration {
 
     private void loadDefaultMobs() {
         config.options().header(
-                "creatures: key is official creature type name (mobID), case-sensitive, from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html");
+            "creatures: key is official creature type name (mobID), case-sensitive, from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html");
         ArrayList<String> tempList = new ArrayList<>();
         // Creeper
         tempList.add("c");

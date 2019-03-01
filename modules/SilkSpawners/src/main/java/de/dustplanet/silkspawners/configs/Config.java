@@ -1,10 +1,9 @@
 package de.dustplanet.silkspawners.configs;
 
-import java.util.ArrayList;
-
+import de.dustplanet.util.CommentedConfiguration;
 import org.bukkit.Material;
 
-import de.dustplanet.util.CommentedConfiguration;
+import java.util.ArrayList;
 
 public class Config extends AbstractConfiguration {
 
@@ -36,13 +35,13 @@ public class Config extends AbstractConfiguration {
         config.addComment("silkDropChance", "", "# Percentage of dropping the spawner when mined");
         config.addDefault("defaultCreature", 90);
         config.addComment("defaultCreature", "",
-                "# When generic spawner items are placed, spawn this creature (e.g. from /give or other plugins)",
-                "# PIG (90) is Minecraft default (put NAMES or IDs here!)");
+            "# When generic spawner items are placed, spawn this creature (e.g. from /give or other plugins)",
+            "# PIG (90) is Minecraft default (put NAMES or IDs here!)");
         config.addDefault("spawnerCommandReachDistance", 6);
         config.addComment("spawnerCommandReachDistance", "", "# How far is the spawner reachable with your crosshair (disable with -1)");
         config.addDefault("minSilkTouchLevel", 1);
         config.addComment("minSilkTouchLevel", "", "# Minimum silk touch level [can be changed via other plugins to a higher value]",
-                "# Set it to 0 to mine it without silk touch");
+            "# Set it to 0 to mine it without silk touch");
         config.addDefault("noDropsCreative", true);
         config.addComment("noDropsCreative", "", "# If a player in creative destroys a spawner nothing is dropped");
         config.addDefault("destroyDropEgg", false);
@@ -51,7 +50,7 @@ public class Config extends AbstractConfiguration {
         config.addComment("destroyDropXP", "", "# If a spawner is destroyed, should XP be dropped");
         config.addDefault("dropSpawnerToInventory", false);
         config.addComment("dropSpawnerToInventory", "",
-                "# If a spawner is mined, should it be directly added to the inventory of the player");
+            "# If a spawner is mined, should it be directly added to the inventory of the player");
         config.addDefault("dropAmount", 1);
         config.addComment("dropAmount", "", "# Amount of spawners to be dropped when mined with valid silk touch");
         config.addDefault("preventXPFarming", true);
@@ -64,7 +63,7 @@ public class Config extends AbstractConfiguration {
         config.addComment("craftableSpawners", "", "# Should the player be able to craft spawners");
         config.addDefault("recipeTop", "AAA");
         config.addComment("recipeTop", "", "# Leave a slot empty (null/air)? Just make a space then, example 'A A' -> middle is free",
-                "# X is always the egg");
+            "# X is always the egg");
         config.addDefault("recipeMiddle", "AXA");
         config.addDefault("recipeBottom", "AAA");
         config.addDefault("recipeAmount", 1);
@@ -72,8 +71,8 @@ public class Config extends AbstractConfiguration {
         temp.add("A,IRON_FENCE");
         config.addDefault("ingredients", temp);
         config.addComment("ingredients", "", "# Custom example:", "#recipeTop: 'A A'", "#recipeMiddle: 'BXA'", "#recipeBottom: 'C D'",
-                "#ingredients:", "#  - 'A,IRON_FENCE'", "#  - 'B,DIRT'", "#  - 'C,2'", "#  - 'D,5'", "",
-                "# You can put IDs or the NAME here (please uppercase)", "# Add it for each custom ingredient you add, too!");
+            "#ingredients:", "#  - 'A,IRON_FENCE'", "#  - 'B,DIRT'", "#  - 'C,2'", "#  - 'D,5'", "",
+            "# You can put IDs or the NAME here (please uppercase)", "# Add it for each custom ingredient you add, too!");
         config.addDefault("spawnersUnstackable", false);
         config.addComment("spawnersUnstackable", "", "# Should spawners be unstackable");
         config.addDefault("consumeEgg", true);
@@ -84,15 +83,15 @@ public class Config extends AbstractConfiguration {
         config.addComment("ignoreCheckNumbers", "", "# Should numbers be ignored (on eggs) and allow every number value?");
         config.addDefault("disableChangeTypeWithEgg", false);
         config.addComment("disableChangeTypeWithEgg", "",
-                "# Disable left click to change spawners, spawns a mob instead. Still blocks Vanilla right click behavior.");
+            "# Disable left click to change spawners, spawns a mob instead. Still blocks Vanilla right click behavior.");
         config.addDefault("spawnEggToSpawner", false);
         config.addComment("spawnEggToSpawner", "",
-                "# Should instead of spawning a mob a MonsterSpawner be placed? (Uses consumeEgg value, too)");
+            "# Should instead of spawning a mob a MonsterSpawner be placed? (Uses consumeEgg value, too)");
         config.addDefault("spawnEggOverride", false);
         config.addComment("spawnEggOverride", "", "# Should the spawn algorithm be overridden? Allows spawning of non-standard entities");
         config.addDefault("spawnEggOverrideSpawnDefault", true);
         config.addComment("spawnEggOverrideSpawnDefault", "",
-                "# Fallback if the creature should be spawned, if not specified for the entity");
+            "# Fallback if the creature should be spawned, if not specified for the entity");
         temp = new ArrayList<>();
         temp.add("WOOD_PICKAXE");
         temp.add("WOODEN_PICKAXE");

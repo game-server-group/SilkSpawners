@@ -1,15 +1,14 @@
 package de.dustplanet.silkspawners.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
+import de.dustplanet.util.SilkUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import de.dustplanet.util.SilkUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Handle the tab completion list.
@@ -19,7 +18,8 @@ import de.dustplanet.util.SilkUtil;
  */
 
 public class SilkSpawnersTabCompleter implements TabCompleter {
-    private String[] commands = { "add", "all", "change", "give", "help", "list", "reload", "rl", "set", "view" };
+
+    private String[] commands = {"add", "all", "change", "give", "help", "list", "reload", "rl", "set", "view"};
     private SilkUtil su;
 
     public SilkSpawnersTabCompleter(SilkUtil util) {

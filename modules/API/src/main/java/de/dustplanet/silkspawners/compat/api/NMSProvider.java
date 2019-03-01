@@ -1,8 +1,5 @@
 package de.dustplanet.silkspawners.compat.api;
 
-import java.util.Collection;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -12,9 +9,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Collection;
+import java.util.List;
+
 public interface NMSProvider {
 
-    public static final int SPAWNER_ID = 52;
+    int SPAWNER_ID = 52;
 
     void spawnEntity(World world, String entityID, double x, double y, double z);
 

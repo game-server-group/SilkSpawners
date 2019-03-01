@@ -1,14 +1,7 @@
 package de.dustplanet.silkspawners.compat.v1_8_R3;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
+import de.dustplanet.silkspawners.compat.api.NMSProvider;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,15 +13,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.ItemStack;
 
-import de.dustplanet.silkspawners.compat.api.NMSProvider;
-import net.minecraft.server.v1_8_R3.Entity;
-import net.minecraft.server.v1_8_R3.EntityTypes;
-import net.minecraft.server.v1_8_R3.Item;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
-import net.minecraft.server.v1_8_R3.TileEntityMobSpawner;
-import net.minecraft.server.v1_8_R3.World;
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.util.*;
 
 public class NMSHandler implements NMSProvider {
+
     private Field tileField;
 
     public NMSHandler() {
@@ -172,8 +162,9 @@ public class NMSHandler implements NMSProvider {
     /**
      * Return the spawner block the player is looking at, or null if isn't.
      *
-     * @param player the player
+     * @param player   the player
      * @param distance the reach distance
+     *
      * @return the found block or null
      */
     @Override

@@ -40,13 +40,13 @@ public class SilkSpawners extends JavaPlugin {
 
     private static final String[] COMPATIBLE_MINECRAFT_VERSIONS = {"v1_7_R1", "v1_7_R2", "v1_7_R3", "v1_7_R4", "v1_8_R1", "v1_8_R2",
         "v1_8_R3", "v1_9_R1", "v1_9_R2", "v1_10_R1", "v1_11_R1", "v1_12_R1", "v1_13_R1", "v1_13_R2"};
-    private Updater updater;
-    private String nmsVersion;
     private static final int PLUGIN_ID = 35890;
-    private SilkUtil silkUtil;
     public CommentedConfiguration config;
     public CommentedConfiguration localization;
     public CommentedConfiguration mobs;
+    private Updater updater;
+    private String nmsVersion;
+    private SilkUtil silkUtil;
 
     @Override
     public void onDisable() {
@@ -327,7 +327,7 @@ public class SilkSpawners extends JavaPlugin {
                 // If the custom recipe fails, we have a fallback
                 getLogger().warning("Could not add the default recipe!");
                 e.printStackTrace();
-                baseSpawnerRecipe.shape(new String[]{"AAA", "ABA", "AAA"});
+                baseSpawnerRecipe.shape("AAA", "ABA", "AAA");
                 baseSpawnerRecipe.setIngredient('A', silkUtil.nmsProvider.getIronFenceMaterial());
                 // Use the right egg!
                 baseSpawnerRecipe.setIngredient('B', silkUtil.nmsProvider.getSpawnEggMaterial());
@@ -477,7 +477,7 @@ public class SilkSpawners extends JavaPlugin {
                 // If the custom recipe fails, we have a fallback
                 getLogger().warning("Could not add the recipe of " + entityID + "!");
                 e.printStackTrace();
-                recipe.shape(new String[]{"AAA", "ABA", "AAA"});
+                recipe.shape("AAA", "ABA", "AAA");
                 recipe.setIngredient('A', silkUtil.nmsProvider.getIronFenceMaterial());
                 // Use the right egg!
                 // TODO

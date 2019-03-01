@@ -13,6 +13,7 @@ import org.bukkit.event.HandlerList;
  * @author xGhOsTkiLLeRx
  */
 public class SilkSpawnersSpawnerPlaceEvent extends Event implements Cancellable, ISilkSpawnersEvent {
+
     /**
      * Handlers list.
      */
@@ -46,8 +47,8 @@ public class SilkSpawnersSpawnerPlaceEvent extends Event implements Cancellable,
     /**
      * Constructor of the event.
      *
-     * @param player who issues the event
-     * @param block is allowed to be null
+     * @param player   who issues the event
+     * @param block    is allowed to be null
      * @param entityID new entity ID
      */
     public SilkSpawnersSpawnerPlaceEvent(Player player, Block block, String entityID) {
@@ -57,6 +58,15 @@ public class SilkSpawnersSpawnerPlaceEvent extends Event implements Cancellable,
             this.spawner = (CreatureSpawner) block.getState();
         }
         this.entityID = entityID;
+    }
+
+    /**
+     * Returns the HanderList in a static way.
+     *
+     * @return the HanderList
+     */
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     /**
@@ -136,15 +146,6 @@ public class SilkSpawnersSpawnerPlaceEvent extends Event implements Cancellable,
      */
     @Override
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    /**
-     * Returns the HanderList in a static way.
-     *
-     * @return the HanderList
-     */
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

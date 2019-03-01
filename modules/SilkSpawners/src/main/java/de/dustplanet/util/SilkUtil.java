@@ -1,14 +1,16 @@
 package de.dustplanet.util;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.annotation.Nullable;
-
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
+import de.dustplanet.silkspawners.SilkSpawners;
+import de.dustplanet.silkspawners.compat.api.NMSProvider;
+import lombok.Getter;
+import lombok.Setter;
+import me.confuser.barapi.BarAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -25,18 +27,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
-import com.sk89q.worldguard.protection.regions.RegionQuery;
-
-import de.dustplanet.silkspawners.SilkSpawners;
-import de.dustplanet.silkspawners.compat.api.NMSProvider;
-import lombok.Getter;
-import lombok.Setter;
-import me.confuser.barapi.BarAPI;
+import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This is the util class where all the magic happens.
@@ -46,49 +43,43 @@ import me.confuser.barapi.BarAPI;
  */
 
 public class SilkUtil {
+
+    /**
+     * NMSHandler instance.
+     */
+    public NMSProvider nmsProvider;
     /**
      * This HashMap is holding the internal Minecraft name of each mob and the display name of each mob.
      */
     @Getter
     private Map<String, String> mobIDToDisplayName = new ConcurrentHashMap<>();
-
     /**
      * This HashMap is holding the display name and aliases of each mob and the internal Minecraft name.
      */
     @Getter
     private Map<String, String> displayNameToMobID = new ConcurrentHashMap<>();
-
     /**
      * Default (fallback) entityID, standard is the pig.
      */
     private String defaultEntityID = EntityType.PIG.getName();
-
     /**
      * Boolean toggle for reflection.
      */
     private boolean useReflection = true;
-
     /**
      * WorldGuard instance, may be null.
      */
     private WorldGuardPlugin wg;
-
     /**
      * BarAPI usage toggle.
      */
     @Getter
     @Setter
     private boolean barAPI;
-
     /**
      * SilkSpawners instance.
      */
     private SilkSpawners plugin;
-
-    /**
-     * NMSHandler instance.
-     */
-    public NMSProvider nmsProvider;
 
     /**
      * Constructor to make your own SilkUtil instance.
@@ -117,7 +108,7 @@ public class SilkUtil {
         SilkSpawners plugin = (SilkSpawners) Bukkit.getPluginManager().getPlugin("SilkSpawners");
         if (plugin == null || plugin.getConfig() == null) {
             Bukkit.getLogger()
-                    .severe("SilkSpawners is not yet ready, have you called SilkUtil.hookIntoSilkSpanwers() before your onEnable()?");
+                .severe("SilkSpawners is not yet ready, have you called SilkUtil.hookIntoSilkSpanwers() before your onEnable()?");
             return null;
         }
         return new SilkUtil(plugin);
@@ -130,7 +121,7 @@ public class SilkUtil {
      */
     private boolean setupNMSProvider() {
         String version = plugin.getNMSVersion();
-        
+
         // Rare cases might trigger API usage before SilkSpawners
         if (version == null) {
             String packageName = Bukkit.getServer().getClass().getPackage().getName();
@@ -145,7 +136,7 @@ public class SilkUtil {
                 return true;
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+            | InvocationTargetException | NoSuchMethodException | SecurityException e) {
             e.printStackTrace();
             plugin.getLogger().severe("Could not find support for this CraftBukkit version.");
             plugin.getLogger().info("Check for updates at https://dev.bukkit.org/projects/silkspawners/");
@@ -204,7 +195,7 @@ public class SilkUtil {
 
             if (verbose) {
                 plugin.getLogger().info("Entity " + entityID + " = " + bukkitEntity + "[" + bukkitEntityClass + "] (display name: "
-                        + displayName + ", aliases: " + aliases + ")");
+                    + displayName + ", aliases: " + aliases + ")");
             }
         }
 
@@ -290,7 +281,8 @@ public class SilkUtil {
      * Returns a new ItemStack of a spawn egg with the specified amount and mob.
      *
      * @param entityID which mob should be spawned
-     * @param amount the amount of spawn eggs
+     * @param amount   the amount of spawn eggs
+     *
      * @return the ItemStack
      */
     public ItemStack newEggItem(String entityID, int amount) {
@@ -298,13 +290,15 @@ public class SilkUtil {
     }
 
     // Create a tagged a mob spawner item with it's entity ID and custom amount
+
     /**
      * This method will make a new MobSpawner with a custom entityID, name and amount.
      *
-     * @param entityID the mob
+     * @param entityID   the mob
      * @param customName if the MobSpawner should be named different
-     * @param amount the wanted amount
-     * @param forceLore whether the lore tag should be forces
+     * @param amount     the wanted amount
+     * @param forceLore  whether the lore tag should be forces
+     *
      * @return the ItemStack with the configured options
      */
     public ItemStack newSpawnerItem(String entityID, String customName, int amount, boolean forceLore) {
@@ -318,7 +312,7 @@ public class SilkUtil {
 
         if (!spawnerName.equalsIgnoreCase("Monster Spawner")) {
             meta.setDisplayName(
-                    ChatColor.translateAlternateColorCodes('\u0026', spawnerName).replace("%creature%", getCreatureName(entityID)));
+                ChatColor.translateAlternateColorCodes('\u0026', spawnerName).replace("%creature%", getCreatureName(entityID)));
         }
 
         if ((forceLore || !isUsingReflection()) && plugin.getConfig().getBoolean("useMetadata", true)) {
@@ -335,6 +329,7 @@ public class SilkUtil {
      * Returns the entity ID of a spawn egg.
      *
      * @param item the egg
+     *
      * @return the entityID
      */
     @Nullable
@@ -365,6 +360,7 @@ public class SilkUtil {
      * Returns the entity of a spawner.
      *
      * @param item the spawner
+     *
      * @return the entity
      */
     @Nullable
@@ -392,6 +388,7 @@ public class SilkUtil {
      * Searches item lore and display name for entity ID.
      *
      * @param meta the ItemMeta
+     *
      * @return entityID if found or null
      */
     @Nullable
@@ -415,6 +412,7 @@ public class SilkUtil {
      * Lookup if mob is recognized by Bukkit's wrappers.
      *
      * @param mobID the name (String) of the mob
+     *
      * @return the result, true or false
      */
     public boolean isRecognizedMob(String mobID) {
@@ -425,6 +423,7 @@ public class SilkUtil {
      * Returns the entity ID of a spawner (block).
      *
      * @param block the spawner block
+     *
      * @return the entity ID
      */
     @Nullable
@@ -449,7 +448,7 @@ public class SilkUtil {
     /**
      * Set the specified MonterSpawner to another entity ID.
      *
-     * @param block MonsterSpawner
+     * @param block  MonsterSpawner
      * @param entity the wanted entity
      */
     public void setSpawnerEntityID(Block block, String entity) {
@@ -483,10 +482,11 @@ public class SilkUtil {
     /**
      * Set a spawner (if allowed) to a new mob.
      *
-     * @param block the MonsterSpawner
-     * @param entityID the new entity ID
-     * @param player the player
+     * @param block         the MonsterSpawner
+     * @param entityID      the new entity ID
+     * @param player        the player
      * @param messageDenied the message which is shown, when the player can't build here see {@link #canBuildHere(Player, Location)}
+     *
      * @return whether the operation was successful or not
      */
     public boolean setSpawnerType(Block block, String entityID, Player player, String messageDenied) {
@@ -503,9 +503,10 @@ public class SilkUtil {
     /**
      * Sets a spawner item or egg to a new ID.
      *
-     * @param item ItemStack (Egg or Spawner)
-     * @param entityID wanted entity ID
+     * @param item       ItemStack (Egg or Spawner)
+     * @param entityID   wanted entity ID
      * @param customName if a custom name should be used (null for none)
+     *
      * @return the updated ItemStack
      */
     public ItemStack setSpawnerType(ItemStack item, String entityID, String customName) {
@@ -523,7 +524,7 @@ public class SilkUtil {
         // Case spawner and check if we should color
         if (item.getType() == nmsProvider.getSpawnerMaterial() && !customName.equalsIgnoreCase("Monster Spawner")) {
             meta.setDisplayName(
-                    ChatColor.translateAlternateColorCodes('\u0026', customName).replace("%creature%", getCreatureName(entityID)));
+                ChatColor.translateAlternateColorCodes('\u0026', customName).replace("%creature%", getCreatureName(entityID)));
         }
 
         // 1.8 broke durability, workaround is the lore
@@ -554,6 +555,7 @@ public class SilkUtil {
      * 'Magma Cube'
      *
      * @param entity the entity
+     *
      * @return the displayname of the mob
      */
     @SuppressWarnings("deprecation")
@@ -614,27 +616,27 @@ public class SilkUtil {
     /**
      * Notify a player about the spawner.
      *
-     * @param player the player
+     * @param player      the player
      * @param spawnerName the creature name
      */
     @SuppressWarnings("deprecation")
     public void notify(Player player, String spawnerName) {
         if (isBarAPI()) {
             String shortInfo = ChatColor.translateAlternateColorCodes('\u0026',
-                    plugin.localization.getString("informationOfSpawnerBar").replace("%creature%", spawnerName));
+                plugin.localization.getString("informationOfSpawnerBar").replace("%creature%", spawnerName));
             BarAPI.setMessage(player, shortInfo, plugin.getConfig().getInt("barAPI.displayTime", 3));
         } else if (isVanillaBossBar()) {
             String shortInfo = ChatColor.translateAlternateColorCodes('\u0026',
-                    plugin.localization.getString("informationOfSpawnerBar").replace("%creature%", spawnerName));
+                plugin.localization.getString("informationOfSpawnerBar").replace("%creature%", spawnerName));
             String barColor = plugin.getConfig().getString("vanillaBossBar.color", "RED");
             String barStyle = plugin.getConfig().getString("vanillaBossBar.style", "SOLID");
             int barTime = plugin.getConfig().getInt("vanillaBossBar.displayTime", 3);
             nmsProvider.displayBossBar(shortInfo, barColor, barStyle, player, plugin, barTime);
         } else {
             sendMessage(player, ChatColor.translateAlternateColorCodes('\u0026',
-                    plugin.localization.getString("informationOfSpawner1").replace("%creature%", spawnerName)));
+                plugin.localization.getString("informationOfSpawner1").replace("%creature%", spawnerName)));
             sendMessage(player, ChatColor.translateAlternateColorCodes('\u0026',
-                    plugin.localization.getString("informationOfSpawner2").replace("%creature%", spawnerName)));
+                plugin.localization.getString("informationOfSpawner2").replace("%creature%", spawnerName)));
         }
     }
 
@@ -650,6 +652,7 @@ public class SilkUtil {
      * Test a String if it ends with egg.
      *
      * @param creatureString the name
+     *
      * @return result, true or false
      */
     @SuppressWarnings("static-method")
@@ -661,6 +664,7 @@ public class SilkUtil {
      * Check if given creature name is known or not. Aliases are supported, too
      *
      * @param creatureString the mob name
+     *
      * @return the result, true of false
      */
     public boolean isUnkown(String creatureString) {
@@ -671,6 +675,7 @@ public class SilkUtil {
      * Check if given creature name is known or not. Aliases are supported, too.
      *
      * @param creatureString the mob name
+     *
      * @return the result, true of false
      */
     public boolean isKnown(String creatureString) {
@@ -681,6 +686,7 @@ public class SilkUtil {
      * Check if the given string is a number.
      *
      * @param number to check
+     *
      * @return number or not found -1
      */
     @SuppressWarnings("static-method")
@@ -693,10 +699,12 @@ public class SilkUtil {
     }
 
     // Checks if the given ItemStack has got the SilkTouch
+
     /**
      * Checks if a given ItemStack is in the list of allowed tools and if the SilkTouch level is high enough.
      *
      * @param tool ItemStack to check
+     *
      * @return the result if the tool hasSilkTouch
      */
     public boolean isValidItemAndHasSilkTouch(ItemStack tool) {
@@ -739,12 +747,13 @@ public class SilkUtil {
      * Get the spawner name, specified for each mob or default. from localization.yml
      *
      * @param mobName the internal name the spawner name is wanted for
+     *
      * @return the found string
      */
     public String getCustomSpawnerName(String mobName) {
         if (plugin.mobs.contains("creatures." + mobName + ".spawnerName")) {
             return ChatColor.translateAlternateColorCodes('&',
-                    plugin.mobs.getString("creatures." + mobName + ".spawnerName", "Monster Spawner"));
+                plugin.mobs.getString("creatures." + mobName + ".spawnerName", "Monster Spawner"));
         }
         return ChatColor.translateAlternateColorCodes('&', plugin.localization.getString("spawnerName", "Monster Spawner"));
     }
@@ -782,8 +791,9 @@ public class SilkUtil {
     /**
      * Checks if a player can build here (WorldGuard).
      *
-     * @param player the player
+     * @param player   the player
      * @param location the location to check
+     *
      * @return the result, true or false
      */
     public boolean canBuildHere(Player player, Location location) {
@@ -799,7 +809,7 @@ public class SilkUtil {
             try {
                 wg.getClass().getDeclaredMethod("canBuild", Player.class, Location.class).invoke(wg, player, location);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-                    | SecurityException e1) {
+                | SecurityException e1) {
                 e1.printStackTrace();
             }
             return false;

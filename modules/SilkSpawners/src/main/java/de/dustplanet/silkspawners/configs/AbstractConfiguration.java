@@ -9,6 +9,7 @@ import de.dustplanet.util.CommentedConfiguration;
  * @author xGhOsTkiLLeRx
  */
 public abstract class AbstractConfiguration {
+
     protected CommentedConfiguration config;
 
     public AbstractConfiguration(CommentedConfiguration config) {

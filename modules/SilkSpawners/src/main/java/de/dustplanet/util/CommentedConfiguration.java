@@ -1,17 +1,5 @@
 package de.dustplanet.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.HashMap;
-
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.file.YamlConstructor;
@@ -19,6 +7,10 @@ import org.bukkit.configuration.file.YamlRepresenter;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 /**
  * Custom configuration with the ability to add comments.
@@ -28,11 +20,12 @@ import org.yaml.snakeyaml.representer.Representer;
  * @author xGhOsTkiLLeRx
  */
 public class CommentedConfiguration extends YamlConfiguration {
-    private HashMap<String, String> comments;
-    private File file;
+
     private final DumperOptions yamlOptions = new DumperOptions();
     private final Representer yamlRepresenter = new YamlRepresenter();
     private final Yaml yaml = new Yaml(new YamlConstructor(), yamlRepresenter, yamlOptions);
+    private HashMap<String, String> comments;
+    private File file;
 
     public CommentedConfiguration(File file) {
         super();
@@ -223,7 +216,7 @@ public class CommentedConfiguration extends YamlConfiguration {
      * Adds a comment just before the specified path. The comment can be
      * multiple lines. An empty string will indicate a blank line.
      *
-     * @param path - Configuration path to add comment.
+     * @param path         - Configuration path to add comment.
      * @param commentLines - Comments to add. One String per line.
      */
     public void addComment(String path, String... commentLines) {
@@ -252,6 +245,7 @@ public class CommentedConfiguration extends YamlConfiguration {
      * Pass a file and it will return it's contents as a string.
      *
      * @param file - File to read.
+     *
      * @return Contents of file. String will be empty in case of any errors.
      */
     public String convertFileToString(File file) {
@@ -259,7 +253,7 @@ public class CommentedConfiguration extends YamlConfiguration {
             char[] buffer = new char[1024];
             String s = "";
             try (Writer writer = new StringWriter();
-                    Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));) {
+                 Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
                 int n;
                 while ((n = reader.read(buffer)) != -1) {
                     writer.write(buffer, 0, n);
@@ -278,11 +272,12 @@ public class CommentedConfiguration extends YamlConfiguration {
      * Writes the contents of a string to a file.
      *
      * @param source - String to write.
-     * @param file - File to write to.
+     * @param file   - File to write to.
+     *
      * @return True on success.
      */
     public boolean stringToFile(String source, File file) {
-        try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(file), "UTF-8")) {
+        try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
             out.write(source);
             return true;
         } catch (IOException e) {

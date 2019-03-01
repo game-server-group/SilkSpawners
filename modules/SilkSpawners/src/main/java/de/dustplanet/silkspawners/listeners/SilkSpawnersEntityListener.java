@@ -24,6 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 
 public class SilkSpawnersEntityListener implements Listener {
+
     private SilkSpawners plugin;
     private SilkUtil silkUtil;
     private Random random;
@@ -41,7 +42,7 @@ public class SilkSpawnersEntityListener implements Listener {
          */
         Entity entity = event.getEntity();
         if (event.isCancelled() || event.getEntity() == null || entity instanceof EnderDragon
-                || plugin.config.getInt("explosionDropChance", 30) == 0) {
+            || plugin.config.getInt("explosionDropChance", 30) == 0) {
             return;
         }
 
